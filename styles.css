@@ -1,141 +1,202 @@
 body {
-  background: url(https://cdn.discordapp.com/attachments/1000320639128838194/1198209907288195153/mainBG.jpg?ex=65be12ef&is=65ab9def&hm=12e53532de4d021d4288e1321ad4a0f50aae07abfd221228bec15b5538420ed3&) no-repeat;
-  background-size: cover;
-  /* background-position: center; */
-  /* padding: 20px; */
-  /* font-family: 'Brush Script MT', cursive; */
-  /* font-family: Garamond, serif; */
-  font-family: Bradley Hand, cursive;
+    background: url("Images/mainBG.jpg") no-repeat;
+    background-size: cover;
+    /* background-position: center; */
+    /* padding: 20px; */
+    /* font-family: 'Brush Script MT', cursive; */
+    /* font-family: Garamond, serif; */
+    font-family: Bradley Hand, cursive;
 }
 
 * {
-  /* margin: 0; */
-  padding: 0;
-  box-sizing: border-box;
-  /* font-family: "Poppins", sans-serif; */
+    /* margin: 0; */
+    padding: 0;
+    box-sizing: border-box;
+    /* font-family: "Poppins", sans-serif; */
 }
 
 h1 {
-  text-align: center;
+    text-align: center;
 }
 
 li {
-  margin-bottom: 3px;
+    margin-bottom: 3px;
 }
 
 a {
-  color: rgb(59, 43, 43);
+    color: rgb(59, 43, 43);
 }
 
 a:visited {
-  color: rgb(162, 53, 162);
+    color: rgb(162, 53, 162);
 }
 
 a:hover {
-  color: rgb(175, 175, 217);
+    color: rgb(175, 175, 217);
 }
 
 a:active {
-  color: rgb(173, 40, 40);
+    color: rgb(173, 40, 40);
 }
 
 i:hover {
-  color: rgb(175, 175, 217);
+    color: rgb(175, 175, 217);
 }
 
 .header {
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 20px 100px;
-  background-color: transparent;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 100;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 100px;
+    background-color: transparent;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
 }
 
 .header-logo {
-  font-size: 32px;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 700;
+    font-size: 32px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
 }
 
 .header-navbar a {
-  position: relative;
-  font-size: 18px;
-  color: #fff;
-  font-weight: 500;
-  text-decoration: none;
-  margin-left: 40px;
+    position: relative;
+    font-size: 18px;
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+    margin-left: 40px;
 }
 
 .header-navbar a::before {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: #fff;
-  transition: .3s;
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #fff;
+    transition: .3s;
 }
 
 .header-navbar a:hover::before {
-  width: 100%;
+    width: 100%;
 
 }
 
+.header-toggle-btn {
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: none;
+}
+
+/* Reponsive design */
+@media(max-width: 992px) {
+    .header-navbar {
+        display: none;
+    }
+
+    .header-toggle-btn {
+        display: block;
+    }
+}
+
+@media(max-width: 576px) {
+    .header-dropdown-menu {
+        left: 2rem;
+        width: unset;
+    }
+}
+
+/* Dropdown menu  */
+.header-dropdown-menu {
+    position: absolute;
+    right: 2rem;
+    top: 60px;
+    width: 280px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: height 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: none;
+}
+
+.header-dropdown-menu.open {
+    position: absolute;
+    right: 2rem;
+    top: 60px;
+    width: 280px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: height 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: block;
+}
+
+.header-dropdown-menu li {
+    padding: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Testing glowing button */
 .glowing-button {
-  box-shadow: 0 0 5px rgb(175, 175, 217), 0 0 25px rgb(175, 175, 217);
+    box-shadow: 0 0 5px rgb(175, 175, 217), 0 0 25px rgb(175, 175, 217);
 }
 
 .glowing-button:hover {
-  box-shadow: 0 0 5px rgb(175, 175, 217), 0 0 25px rgb(175, 175, 217), 0 0 50px rgb(175, 175, 217), 0 0 100px rgb(175, 175, 217), 0 0 200px rgb(175, 175, 217);
+    box-shadow: 0 0 5px rgb(175, 175, 217), 0 0 25px rgb(175, 175, 217), 0 0 50px rgb(175, 175, 217), 0 0 100px rgb(175, 175, 217), 0 0 200px rgb(175, 175, 217);
 }
 
 .info-block {
-  /* position: relative; */
-  background-color: white;
-  border-color: rgb(151, 203, 255);
-  border-style: solid;
-  width: 80%;
-  /* margin: auto; */
-  /* padding-top: 10px; */
-  border-radius: 50px;
-  margin-top: 20px;
-  padding-bottom: 20px;
+    /* position: relative; */
+    background-color: white;
+    border-color: rgb(151, 203, 255);
+    border-style: solid;
+    width: 80%;
+    /* margin: auto; */
+    /* padding-top: 10px; */
+    border-radius: 50px;
+    margin-top: 20px;
+    padding-bottom: 20px;
 }
 
 .item-list {
-  display: flex;
-  justify-content: center;
-  width: 100%;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 .cropped-avatar {
-  border-radius: 1000px;
-  margin-bottom: 1%;
-  width: 300px;
-  height: 300px;
-  object-fit: cover;
-  object-position: 0% 0%;
+    border-radius: 1000px;
+    margin-bottom: 1%;
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    object-position: 0% 0%;
 }
 
 .info-icon {
-  margin-top: 20px;
-  margin-right: 20px;
-  margin-left: 20px;
-  font-size: 60px;
-  color: #2196F3;
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-left: 20px;
+    font-size: 60px;
+    color: #2196F3;
 }
 
 .upload-picture {
-  object-fit: cover;
-  height: 50%;
-  width: 50%;
-  object-position: 0% 0%;
-  border-radius: 20px;   
+    object-fit: cover;
+    height: 50%;
+    width: 50%;
+    object-position: 0% 0%;
+    border-radius: 20px;
 }

@@ -28,7 +28,7 @@ a {
 }
 
 a:visited {
-    color: rgb(162, 53, 162);
+    color: rgb(212, 133, 212);
 }
 
 a:hover {
@@ -43,7 +43,7 @@ i:hover {
     color: rgb(175, 175, 217);
 }
 
-.header {
+.navbar {
     position: relative;
     top: 0;
     left: 0;
@@ -93,16 +93,26 @@ i:hover {
     font-size: 1.5rem;
     cursor: pointer;
     display: none;
+    position: relative;
 }
 
 /* Reponsive design */
 @media(max-width: 992px) {
+    .navbar {
+        justify-content: flex-end;
+    }
+
+    .header-logo {
+        display: none;
+    }
+
     .header-navbar {
         display: none;
     }
 
     .header-toggle-btn {
-        display: block;
+        display: flex;
+        justify-items: flex-end;
     }
 }
 
@@ -115,10 +125,11 @@ i:hover {
 
 /* Dropdown menu  */
 .header-dropdown-menu {
-    position: absolute;
+    position: relative;
     right: 2rem;
     top: 60px;
-    width: 280px;
+    width: 200%;
+    font-size: 1.5rem;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(15px);
     border-radius: 10px;
@@ -128,10 +139,12 @@ i:hover {
 }
 
 .header-dropdown-menu.open {
-    position: absolute;
+    position: relative;
     right: 2rem;
     top: 60px;
-    width: 280px;
+    width: 200%;
+    font-size: 1.25rem;
+    margin-bottom: 50%;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(15px);
     border-radius: 10px;

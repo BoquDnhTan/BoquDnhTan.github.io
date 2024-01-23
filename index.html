@@ -15,28 +15,30 @@
 </head>
 
 <body>
-    <header class="header">
-        <a href="#" class="header-logo">Intro Website
-            <div class="header-navbar">
-                <a href="index.html" target="_self">Home</a>
-                <a href="about.html" target="_self">About</a>
-                <a href="gallery.html" target="_self">Gallery</a>
-                <a href="https://hieupham1103.github.io/kt15p-giai-lap-lo-de/">Services</a>
-                <a href="#">Contact</a>
+    <header>
+        <div class="navbar">
+            <a href="#" class="header-logo" target="_self">Intro Website
+                <div class="header-navbar">
+                    <a href="index.html" target="_self">Home</a>
+                    <a href="about.html" target="_self">About</a>
+                    <a href="gallery.html" target="_self">Gallery</a>
+                    <a href="https://hieupham1103.github.io/kt15p-giai-lap-lo-de/">Services</a>
+                    <a href="#">Contact</a>
+                </div>
+            </a>
+    
+            <div class="header-toggle-btn">
+                <i class="fa-solid fa-bars"></i>
+                <div class="header-dropdown-menu">
+                    <li><a href="index.html" target="_self">Home</a></li>
+                    <li><a href="about.html" target="_self">About</a></li>
+                    <li><a href="gallery.html" target="_self">Gallery</a></li>
+                    <li><a href="https://hieupham1103.github.io/kt15p-giai-lap-lo-de/">Services</a></li>
+                    <li><a href="#">Contact</a></li>
+                </div>
             </div>
-        </a>
-
-        <div class="header-toggle-btn">
-            <i class="fa-solid fa-bars"></i>
         </div>
 
-        <div class="header-dropdown-menu">
-            <li><a href="index.html" target="_self">Home</a></li>
-            <li><a href="about.html" target="_self">About</a></li>
-            <li><a href="gallery.html" target="_self">Gallery</a></li>
-            <li><a href="https://hieupham1103.github.io/kt15p-giai-lap-lo-de/">Services</a></li>
-            <li><a href="#">Contact</a></li>
-        </div>
     </header>
 
     <script>
@@ -48,7 +50,7 @@
             dropDownMenu.classList.toggle('open');
             const isOpen = dropDownMenu.classList.contains('open');
 
-            toggleBtnIcon.classList = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'
+            toggleBtnIcon.classList = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
         }
     </script>
 

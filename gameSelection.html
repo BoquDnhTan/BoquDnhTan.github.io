@@ -52,7 +52,7 @@
         const toggleButtonIcon = document.querySelector('.toggle-button i');
         const dropdownMenu = document.querySelector('.dropdown-menu');
 
-        toggleButton.onclick = function() {
+        toggleButton.onclick = function () {
             dropdownMenu.classList.toggle('open');
             const isOpen = dropdownMenu.classList.contains('open');
 
@@ -62,12 +62,32 @@
 
     <main>
         <center>
-            <div class="info-block">
-                <h2>I have bought a little potato pc with my reward money from school</h2>
-                <img class="upload-picture" src="https://cdn.discordapp.com/attachments/1142479170622992534/1185262244116832266/IMG_9465.jpg?ex=65bd1cfc&is=65aaa7fc&hm=c5fee00e0899c11a2ae074fd9b0a738cd60368640f96557d52032095ce119818&">                
+            <div style="display: flex; width: 80%; justify-content: space-evenly;">
+                <div class="info-block" style="margin-right: 5%;">
+                    <h2>Tai xiu</h2>
+                    <!-- <br> -->
+                    <a href="https://hieupham1103.github.io/kt15p-giai-lap-lo-de/"><img src="Images/TaiXiu/preview.png" style="width: 80%; "></a>
+                </div>
+    
+                <div class="info-block">
+                    <h2>Bau cua</h2>
+                    <br>
+                    <a href="baucua.html" target="_self"><img src="Images/BauCua/preview.png" style="width: 80%; "></a>
+                </div>
             </div>
         </center>
-    
+
+        <style>
+            .info-block a {
+                box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+                transition: box-shadow 0.3s ease-in-out;
+            }
+
+            .info-block a:hover {
+                background-color: aliceblue;
+                box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.8);
+            }
+        </style>
     </main>
 </body>
 

@@ -42,7 +42,9 @@ function startBaucua() {
     }
     let winMoney = 0;
     for (let i = 0; i < 6; i++) {
-        winMoney += cntDatcuoc[i] * cntRoll[i];
+        if (cntRoll[i] > 0) {
+            winMoney += cntDatcuoc[i] * (cntRoll[i] + 1);
+        }
         cntDatcuoc[i] = 0;
     }
     money += winMoney;

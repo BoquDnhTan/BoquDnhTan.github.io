@@ -2,13 +2,24 @@
 <html lang="en">
 
 <head>
+    <!-- Meta tags for encoding and responsiveness -->
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Font Awesome for icons -->
     <script src="https://kit.fontawesome.com/e0797236d9.js" crossorigin="anonymous"></script>
+
+    <!-- External stylesheet -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Favicon for the page -->
     <link href="Images/favicon.ico" rel="icon" type="image/x-icon">
+
+    <!-- Page title -->
     <title>Caro Game - Memory Modes</title>
+
+    <!-- Inline styling for game layout and design -->
     <style>
         .caro-settings {
             margin-bottom: 15px;
@@ -86,16 +97,18 @@
             font-size: 1rem;
         }
     </style>
+
+    <!-- ONNX Runtime for in-browser AI inference -->
     <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
 </head>
 
 <body>
-
-    <!-- Firebase Modular SDK Setup -->
     <script type="module">
+        // Firebase SDK imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
 
+        // Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyBEOcQ04f7vHve1G39PriVV4eTT7o1RQnU",
             authDomain: "simple-caro-game-asamai.firebaseapp.com",
@@ -106,9 +119,11 @@
             measurementId: "G-0CMF3KFHYT"
         };
 
+        /** Initializes Firebase app and Firestore database */
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // DOM element references
         const playerXInput = document.getElementById("playerXInput");
         const playerOInput = document.getElementById("playerOInput");
         const playerStats = document.getElementById("playerStats");
@@ -121,6 +136,7 @@
         const memoryModeSelect = document.getElementById("memoryModeSelect");
         const gameModeSelect = document.getElementById("gameModeSelect");
 
+        // Game state variables
         let currentPlayer = "X";
         let gameActive = true;
         let boardState = [];
@@ -133,46 +149,49 @@
         let gameMode = "pvp";
         let aiSession = null;
 
+        /** Loads the ONNX AI model into memory */
         async function loadAIModel() {
             aiSession = await ort.InferenceSession.create("./models/caro_model.onnx");
             console.log("✅ AI model loaded");
         }
 
+        /**
+         * Encodes the game board into a fixed-length array for AI input
+         * @param {Array} boardArray - Game board as a 1D array
+         * @param {number} size - Board width/height
+         * @returns {Array} Encoded board of 100 elements
+         */
         function encodeBoard(boardArray, size) {
             const flat = [];
-
             for (let i = 0; i < size * size; i++) {
                 const val = boardArray[i];
                 flat.push(val === "X" ? 1 : val === "O" ? -1 : 0);
             }
-
-            // Pad to 100
             while (flat.length < 100) flat.push(-2);
             return flat;
         }
 
+        /**
+         * Uses the AI model to get the next best move
+         * @param {Array} boardState - Current board state
+         * @param {number} size - Board size
+         * @returns {number|null} Index of the best move
+         */
         async function getAIMove(boardState, size) {
             if (!aiSession) return null;
-
             const inputTensor = new ort.Tensor("float32", Float32Array.from(encodeBoard(boardState, size)), [1, 100]);
-            const feeds = { input: inputTensor };
-
-            const results = await aiSession.run(feeds);
+            const results = await aiSession.run({ input: inputTensor });
             const output = results.output.data;
 
-            // Filter to valid moves only
-            const validIndices = boardState
-                .map((val, i) => (val === "" ? i : null))
-                .filter(i => i !== null);
-
-            const bestMove = validIndices
-                .map(i => [i, output[i]])
-                .sort((a, b) => b[1] - a[1])[0][0];
-
+            const validIndices = boardState.map((val, i) => val === "" ? i : null).filter(i => i !== null);
+            const bestMove = validIndices.map(i => [i, output[i]]).sort((a, b) => b[1] - a[1])[0][0];
             return bestMove;
         }
 
-
+        /**
+         * Ensures a player exists in the Firestore database
+         * @param {string} name - Player name
+         */
         async function ensureUser(name) {
             const ref = doc(db, "player", name);
             const snap = await getDoc(ref);
@@ -181,6 +200,10 @@
             }
         }
 
+        /**
+         * Updates the player's win count in the database
+         * @param {string} name - Player name
+         */
         async function updateWinCount(name) {
             const ref = doc(db, "player", name);
             const snap = await getDoc(ref);
@@ -189,6 +212,7 @@
             updatePlayerStatsUI();
         }
 
+        /** Updates the displayed win counts for both players */
         async function updatePlayerStatsUI() {
             await ensureUser(playerX);
             await ensureUser(playerO);
@@ -202,12 +226,12 @@
             playerOInfo.textContent = `Player O: ${playerO} (Wins: ${winsO})`;
         }
 
+        /** Starts or restarts the game */
         function startGame() {
-            gameMode = gameModeSelect.value;  // 👈 must come before playerO
-
+            gameMode = gameModeSelect.value;
             playerX = playerXInput.value.trim() || "PlayerX";
             playerO = gameMode === "pve" ? "Machine" : (playerOInput.value.trim() || "PlayerO");
-            console.log(playerX, playerO);
+
             if (playerX === playerO) {
                 alert("Player X and Player O cannot be the same!");
                 return;
@@ -227,9 +251,6 @@
             memoryMode = memoryModeSelect.value;
             hiddenCells.clear();
             statusText.textContent = "Player X's Turn";
-            gameMode = gameModeSelect.value;
-
-            console.log(gameMode);
 
             for (let i = 0; i < size * size; i++) {
                 const cell = document.createElement("div");
@@ -246,12 +267,17 @@
             }
         }
 
+        /**
+         * Handles player or AI moves
+         * @param {Event} e - Click event
+         */
         function handleMove(e) {
             const index = parseInt(e.target.dataset.index);
             if (boardState[index] || !gameActive) return;
 
             let moveIndex = index;
 
+            // Random cancel mode
             if (memoryMode === "randomcancel" && Math.random() < 0.4) {
                 const empty = boardState.map((val, i) => val === "" && i !== index ? i : null).filter(v => v !== null);
                 if (empty.length > 0) {
@@ -279,35 +305,33 @@
 
             currentPlayer = currentPlayer === "X" ? "O" : "X";
             statusText.textContent = `Player ${currentPlayer}'s Turn`;
+
             if (gameMode === "pve" && currentPlayer === "O") {
                 setTimeout(async () => {
                     const moveIndex = await getAIMove(boardState, size);
-                    console.log("AI Move Index:", moveIndex);
                     if (moveIndex != null && boardState[moveIndex] === "") {
-                        board.children[moveIndex].click();  // simulate click
-                    }
-                    else {
-                        setTimeout(machineMove, 400); // give it a short delay
+                        board.children[moveIndex].click();
+                    } else {
+                        setTimeout(machineMove, 400);
                     }
                 }, 500);
             }
-
-
 
             if (memoryMode === "dynamic") {
                 blindRandomCells();
             }
         }
 
+        /** Makes a random move for the machine player */
         function machineMove() {
             const empty = boardState.map((v, i) => v === "" ? i : null).filter(i => i !== null);
             if (empty.length === 0 || !gameActive) return;
             const index = empty[Math.floor(Math.random() * empty.length)];
             const cell = board.children[index];
-            cell.click(); // trigger handleMove for machine
+            cell.click();
         }
 
-
+        /** Randomly hides empty cells based on memory mode */
         function blindRandomCells() {
             hiddenCells.clear();
             for (let i = 0; i < boardState.length; i++) {
@@ -328,6 +352,7 @@
             }
         }
 
+        /** Reveals all hidden cells on the board */
         function revealAll() {
             hiddenCells.forEach(i => {
                 const cell = board.children[i];
@@ -337,6 +362,11 @@
             hiddenCells.clear();
         }
 
+        /**
+         * Checks if the current player has won after a move
+         * @param {number} index - Index of last move
+         * @returns {boolean} True if win condition met
+         */
         function checkWinner(index) {
             const row = Math.floor(index / size);
             const col = index % size;
@@ -349,6 +379,14 @@
             );
         }
 
+        /**
+         * Counts matching pieces in a direction
+         * @param {number} r - Row
+         * @param {number} c - Column
+         * @param {number} dr - Row step
+         * @param {number} dc - Column step
+         * @returns {number} Count of consecutive pieces
+         */
         function countConsecutive(r, c, dr, dc) {
             let count = 0;
             while (r >= 0 && r < size && c >= 0 && c < size && boardState[r * size + c] === currentPlayer) {
@@ -359,17 +397,21 @@
             return count;
         }
 
+        // Initial setup
         startGame();
         loadAIModel();
         window.startGame = startGame;
     </script>
 
+
+    <!-- Navigation Header -->
     <header>
         <div class="navbar">
             <div class="logo">
                 <a href="#">Intro web</a>
             </div>
             <ul class="links">
+                <!-- Navigation links -->
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="gallery.html">Gallery</a></li>
@@ -384,8 +426,10 @@
         </div>
     </header>
 
+    <!-- Main Game Section -->
     <main>
         <center>
+            <!-- Player input fields -->
             <div class="info-block">
                 <h3>Player Setup</h3>
                 <label style="color: white;">Player X Username:</label>
@@ -394,23 +438,28 @@
                 <input type="text" id="playerOInput" placeholder="e.g. Bob" />
             </div>
 
+            <!-- Player stats UI, updated dynamically -->
             <div class="info-block" id="playerStats" style="display: none;">
                 <h3>Players</h3>
                 <p id="playerXInfo">Player X: </p>
                 <p id="playerOInfo">Player O: </p>
             </div>
 
+            <!-- Game settings and board container -->
             <div class="info-block">
                 <h2>Caro Game (Tic-Tac-Toe)</h2>
                 <div class="caro-settings">
+                    <!-- Dropdowns for board size, memory mode, and game mode -->
                     <label style="color: #fafafa; font-weight: 600;">Board size:</label>
                     <select id="boardSize">
+                        <!-- Generates board size options from 3x3 to 10x10 -->
                         <script>
                             for (let i = 3; i <= 10; i++) {
                                 document.write(`<option value="${i}">${i} x ${i}</option>`);
                             }
                         </script>
                     </select>
+
                     <label style="color: #fafafa; font-weight: 600; margin-left: 15px;">
                         Memory Mode:
                         <select id="memoryModeSelect">
@@ -420,6 +469,7 @@
                             <option value="randomcancel">Random Cancel</option>
                         </select>
                     </label>
+
                     <label style="color: #fafafa; font-weight: 600; margin-left: 15px;">
                         Game Mode:
                         <select id="gameModeSelect">
@@ -427,8 +477,12 @@
                             <option value="pve">Player vs Machine</option>
                         </select>
                     </label>
+
+                    <!-- Start game button -->
                     <button class="size-button" onclick="startGame()">Start Game</button>
                 </div>
+
+                <!-- Game board and status text -->
                 <div id="caroBoard" class="caro-board"></div>
                 <div class="status-text" id="statusText">Player X's Turn</div>
                 <button class="restart-button" onclick="startGame()">Restart</button>
